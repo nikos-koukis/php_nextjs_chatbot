@@ -1,0 +1,30 @@
+version: '1.0'
+
+networks:
+  chatbot_project:
+
+services:
+  app:
+    build:
+      context: ./api  # Pointing to the api folder containing Laravel
+      dockerfile: Dockerfile  # Laravel Dockerfile
+    container_name: chatbot_laravel
+    volumes:
+      - ./api:/var/www/html/  # Map Laravel directory to container
+    restart: always
+    ports:
+      - "80:80"  # Expose Laravel app on port 80
+    networks:
+      - chatbot_project
+
+  frontend:
+    build:
+      context: ./platform  # Pointing to the platform folder containing Next.js
+      dockerfile: Dockerfile  # Next.js Dockerfile
+    container_name: chatbot_nextjs
+    volumes:
+      - ./platform:/app  # Map Next.js directory to container
+    ports:
+      - "3000:3000"  # Expose Next.js app on port 3000
+    networks:
+      - chatbot_project
